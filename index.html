@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Game Jasmijn</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0d0d0d;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            font-family: sans-serif;
+            color: #fff;
+        }
+
+        h1 {
+            margin-bottom: 12px;
+            font-size: 2rem;
+            letter-spacing: 0.1em;
+            color: #f1c40f;
+            text-shadow: 0 0 12px #f1c40f88;
+        }
+
+        #gameCanvas {
+            display: block;
+            border: 3px solid #f1c40f44;
+            border-radius: 4px;
+            box-shadow: 0 0 40px #00000080;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌟 Game Jasmijn</h1>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+    <!-- Load scripts in dependency order — no server required -->
+    <script src="src/input.js"></script>
+    <script src="src/player.js"></script>
+    <script src="src/game.js"></script>
+</body>
+</html>
