@@ -1,0 +1,21 @@
+/**
+ * input.js
+ * Tracks which keyboard keys are currently held down.
+ */
+
+const Input = {
+    keys: {},
+
+    init() {
+        window.addEventListener('keydown', (e) => {
+            this.keys[e.code] = true;
+        });
+        window.addEventListener('keyup', (e) => {
+            this.keys[e.code] = false;
+        });
+    },
+
+    isDown(code) {
+        return !!this.keys[code];
+    }
+};
