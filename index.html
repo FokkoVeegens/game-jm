@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <title>🐬 Game Jasmijn</title>
     <style>
         * {
@@ -30,17 +32,80 @@
             text-shadow: 0 0 12px #5dade288;
         }
 
+        #game-container {
+            position: relative;
+            width: min(800px, 100vw);
+            aspect-ratio: 800 / 600;
+        }
+
         #gameCanvas {
             display: block;
+            width: 100%;
+            height: 100%;
             border: 3px solid #5dade244;
             border-radius: 4px;
             box-shadow: 0 0 40px #00000080;
+            touch-action: none;
         }
+
+        /* Touch controls — only visible on coarse-pointer (touch) devices */
+        #touch-controls {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            display: none;
+        }
+
+        @media (pointer: coarse) {
+            #touch-controls { display: block; }
+        }
+
+        .touch-btn {
+            position: absolute;
+            pointer-events: all;
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+            /* ~13% of the 4:3 game container gives ~104 px on desktop, ~49 px on 375 px viewport */
+            width: 13%;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            font-size: clamp(14px, 4vw, 30px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
+        }
+
+        .touch-btn:active, .touch-btn.active {
+            background: rgba(255, 255, 255, 0.38);
+        }
+
+        /* D-pad: left edge */
+        #btn-left  { bottom: 4%; left: 4%; }
+        #btn-right { bottom: 4%; left: 20%; }
+
+        /* Action: right edge */
+        #btn-up    { bottom: 4%; right: 20%; }
+        #btn-slap  { bottom: 4%; right: 4%; }
     </style>
 </head>
 <body>
     <h1>🐬 Game Jasmijn</h1>
-    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <div id="game-container">
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        <div id="touch-controls">
+            <button class="touch-btn" id="btn-left"  aria-label="Links">◀</button>
+            <button class="touch-btn" id="btn-right" aria-label="Rechts">▶</button>
+            <button class="touch-btn" id="btn-up"    aria-label="Zwemmen">▲</button>
+            <button class="touch-btn" id="btn-slap"  aria-label="Slaan">💥</button>
+        </div>
+    </div>
 
     <!-- Load scripts in dependency order — no server required -->
     <script src="src/input.js"></script>
