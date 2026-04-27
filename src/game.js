@@ -3,6 +3,11 @@
  * Main game loop, world definition, and rendering.
  */
 
+// Detect whether the device supports touch so hints can be adapted
+const isTouchDevice = ('ontouchstart' in window) ||
+    (navigator.maxTouchPoints > 0) ||
+    (navigator.msMaxTouchPoints > 0);
+
 const canvas = document.getElementById('gameCanvas');
 const ctx    = canvas.getContext('2d');
 
@@ -254,10 +259,17 @@ function drawHUD() {
     ctx.font         = '12px sans-serif';
     ctx.textAlign    = 'center';
     ctx.textBaseline = 'bottom';
-    ctx.fillText(
-        'Pijltjes/WASD bewegen  ·  Omhoog zwemmen  ·  Spatie/X slaan',
-        canvas.width / 2, canvas.height - 8
-    );
+    if (isTouchDevice) {
+        ctx.fillText(
+            '◀▶ bewegen  ·  ▲ zwemmen  ·  💥 slaan',
+            canvas.width / 2, canvas.height - 8
+        );
+    } else {
+        ctx.fillText(
+            'Pijltjes/WASD bewegen  ·  Omhoog zwemmen  ·  Spatie/X slaan',
+            canvas.width / 2, canvas.height - 8
+        );
+    }
 
     ctx.restore();
 }
@@ -289,7 +301,9 @@ function drawGameOver() {
         ctx.fillStyle = '#f1c40f';
         ctx.font      = '22px sans-serif';
         ctx.fillText(
-            'Druk op Spatie of Enter om opnieuw te beginnen',
+            isTouchDevice
+                ? 'Tik op het scherm om opnieuw te beginnen'
+                : 'Druk op Spatie of Enter om opnieuw te beginnen',
             canvas.width / 2, canvas.height / 2 + 68
         );
     }
@@ -304,6 +318,13 @@ function resetGame() {
     camera.x      = 0;
     Player.init(100, 480);
 }
+
+// Tap anywhere on the canvas to restart after game over (touch devices)
+canvas.addEventListener('touchstart', () => {
+    if (gameOver && gameOverTimer >= GAME_OVER_RESTART_DELAY) {
+        resetGame();
+    }
+}, { passive: true });
 
 // ── Game loop ─────────────────────────────────────────────────────────────────
 
